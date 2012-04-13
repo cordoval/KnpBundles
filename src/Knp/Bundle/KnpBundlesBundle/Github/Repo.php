@@ -191,6 +191,11 @@ class Repo
         return $bundle;
     }
 
+    public function fetchRequiresFromComposersFilteredAsBundles()
+    {
+
+    }
+
     public function fetchComposerKeywords(Entity\Bundle $bundle)
     {
         $composerFilename = 'composer.json';

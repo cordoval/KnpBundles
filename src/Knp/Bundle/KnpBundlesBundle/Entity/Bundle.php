@@ -80,6 +80,16 @@ class Bundle
     protected $recommenders = null;
 
     /**
+     * Bundle's bundle deps
+     *
+     * @ORM\ManyToMany(targetEntity="Bundle")
+     * @ORM\JoinTable(name="bundles_bundle_deps",
+     *      joinColumns={@ORM\JoinColumn(name="bundle_id", referencedColumnName="id")}
+     *      )
+     */
+    protected $bundleDependencies = null;
+
+    /**
      * Repo description
      *
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -1077,5 +1087,75 @@ class Bundle
     public function getIndexedAt()
     {
         return $this->indexedAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param datetime $updatedAt
+     * @return Bundle
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    /**
+     * Set trend1
+     *
+     * @param integer $trend1
+     * @return Bundle
+     */
+    public function setTrend1($trend1)
+    {
+        $this->trend1 = $trend1;
+        return $this;
+    }
+
+    /**
+     * Add recommenders
+     *
+     * @param Knp\Bundle\KnpBundlesBundle\Entity\User $recommenders
+     * @return Bundle
+     */
+    public function addUser(\Knp\Bundle\KnpBundlesBundle\Entity\User $recommenders)
+    {
+        $this->recommenders[] = $recommenders;
+        return $this;
+    }
+
+    /**
+     * Add bundleDependencies
+     *
+     * @param Knp\Bundle\KnpBundlesBundle\Entity\Bundle $bundleDependencies
+     * @return Bundle
+     */
+    public function addBundle(\Knp\Bundle\KnpBundlesBundle\Entity\Bundle $bundleDependencies)
+    {
+        $this->bundleDependencies[] = $bundleDependencies;
+        return $this;
+    }
+
+    /**
+     * Get bundleDependencies
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getBundleDependencies()
+    {
+        return $this->bundleDependencies;
+    }
+
+    /**
+     * Add scores
+     *
+     * @param Knp\Bundle\KnpBundlesBundle\Entity\Score $scores
+     * @return Bundle
+     */
+    public function addScore(\Knp\Bundle\KnpBundlesBundle\Entity\Score $scores)
+    {
+        $this->scores[] = $scores;
+        return $this;
     }
 }
