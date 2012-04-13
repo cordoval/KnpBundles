@@ -5,7 +5,8 @@ php:
 
 before_script:
     - cp app/config/parameters.yml.test app/config/parameters.yml
-    - php bin/vendors install
+    - wget -nc http://getcomposer.org/composer.phar
+    - php composer.phar update
     - ./bin/prepare-test-env.sh
 
 script: phpunit -c app/ && php app/console --env=test behat --format progress
