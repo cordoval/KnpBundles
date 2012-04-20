@@ -132,6 +132,7 @@ class UpdateBundleConsumer implements ConsumerInterface
 
                 $this->updateContributors($bundle);
                 $this->updateKeywords($bundle);
+                $this->updateDependencies($bundle);
                 $score = $this->em->getRepository('Knp\Bundle\KnpBundlesBundle\Entity\Score')->setScore(new \DateTime(), $bundle, $bundle->getScore());
                 $this->em->persist($score);
                 $this->em->flush();
@@ -191,6 +192,23 @@ class UpdateBundleConsumer implements ConsumerInterface
             $keyword = $repository->findOrCreateOne($keyword);
 
             $bundle->addKeyword($keyword);
+        }
+    }
+
+    /**
+     * Updates bundle dependencies fetched from componser.json
+     *
+     * @param Bundle $bundle
+     */
+    private function updateDependencies(Bundle $bundle)
+    {
+        $dependencies = $this->githubRepoApi->fetchComposerDependencies($bundle);
+        $repository = $this->em->getRepository('Knp\Bundle\KnpBundlesBundle\Entity\Dependency');
+
+        foreach ($dependencies as $dependency) {
+            $dependency = $repository->findOrCreateOne($dependency);
+
+            $bundle->addDependency($dependency);
         }
     }
 

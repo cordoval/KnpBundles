@@ -251,6 +251,17 @@ class Bundle
     protected $composerName = null;
 
     /**
+     * Bundle dependencies
+     *
+     * @ORM\ManyToMany(targetEntity="Dependency", inversedBy="bundles", cascade={"persist"})
+     * @ORM\JoinTable(name="bundles_dependency",
+     *      joinColumns={@ORM\JoinColumn(name="bundle_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="dependency_id", referencedColumnName="id")}
+     *      )
+     */
+    protected $dependencies;
+
+    /**
      * Bundle keywords
      *
      * @ORM\ManyToMany(targetEntity="Keyword", inversedBy="bundles", cascade={"persist"})
@@ -297,6 +308,7 @@ class Bundle
         $this->trend1 = 0;
         $this->composerName = null;
         $this->keywords = new ArrayCollection();
+        $this->dependencies = new ArrayCollection();
         $this->state = self::STATE_UNKNOWN;
     }
 
@@ -1024,6 +1036,14 @@ class Bundle
     /**
      * @return Collection
      */
+    public function getDependencies()
+    {
+        return $this->dependencies;
+    }
+
+    /**
+     * @return Collection
+     */
     public function getKeywords()
     {
         return $this->keywords;
@@ -1037,6 +1057,19 @@ class Bundle
         return count($this->keywords);
     }
 
+    /**
+     * @return int Total nb of dependencies for this bundle
+     */
+    public function countDependencies()
+    {
+        return count($this->dependencies);
+    }
+
+    public function hasDependency(Dependency $dependency)
+    {
+        return $this->dependencies->contains($dependency);
+    }
+
     public function hasKeyword(Keyword $keyword)
     {
         return $this->keywords->contains($keyword);
@@ -1046,6 +1079,13 @@ class Bundle
     {
         if (!$this->hasKeyword($keyword)) {
             $this->keywords[] = $keyword;
+        }
+    }
+
+    public function addDependency(Dependency $dependency)
+    {
+        if (!$this->hasDependency($dependency)) {
+            $this->dependencies[] = $dependency;
         }
     }
 

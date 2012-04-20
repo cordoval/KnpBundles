@@ -191,9 +191,16 @@ class Repo
         return $bundle;
     }
 
-    public function fetchRequiresFromComposersFilteredAsBundles()
+    public function fetchComposerDependencies(Entity\Bundle $bundle)
     {
+        $composerFilename = 'composer.json';
+        $gitRepo = $this->gitRepoManager->getRepo($bundle);
 
+        if ($gitRepo->hasFile($composerFilename)) {
+            $composer = json_decode($gitRepo->getFileContent($composerFilename));
+
+            return isset($composer->requires) ? $composer->requires : array();
+        }
     }
 
     public function fetchComposerKeywords(Entity\Bundle $bundle)

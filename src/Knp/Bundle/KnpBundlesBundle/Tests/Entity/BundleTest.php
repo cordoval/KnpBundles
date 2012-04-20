@@ -25,4 +25,18 @@ class BundleTest extends \PHPUnit_Framework_TestCase
         $bundle->setNbForks(1);
         $this->assertTrue($bundle->isInitialized());
     }
+
+    public function testNotInitializedDependencies()
+    {
+        $bundle = new Bundle('knplabs/KnpMenuBundle');
+        $this->assertNull($bundle->getBundleDependencies());
+    }
+
+    public function testCanHaveDependencies()
+    {
+        $bundle = new Bundle('knplabs/KnpMenuBundle');
+        $bundleDependentOn = new Bundle('knplabs/KnpMenuBundle');
+        $bundle->addBundle($bundleDependentOn);
+        $this->assertNotEmpty($bundle->getBundleDependencies());
+    }
 }
